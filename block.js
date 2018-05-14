@@ -56,6 +56,12 @@ class Block{
         //replace the to do with hash
     }
 
+    //for generating hashes
+    static blockHash(block){
+        //all values to generate hash
+        const {timestamp, lastHash, data}= block;
+        return Block.hash(timestamp,lastHash,data);
+    }
 
 }
 
