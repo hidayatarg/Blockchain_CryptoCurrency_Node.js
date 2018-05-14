@@ -7,13 +7,14 @@ const Block= require('./block')
 //providing the test the blockchain and the error call back function
 describe('Blockchain', () => {
     //Declaring variables
-    let bc;
+    let bc, bc2;
 
 
     //beforeEach runs before each unit test
     beforeEach(() => {
         //new-keyword: refresh instance of this blockchain class
         bc= new Blockchain();
+        bc2= new Blockchain();
     });
 
     //it (description about test executed, call back error function codes to execute the test)
@@ -31,6 +32,33 @@ describe('Blockchain', () => {
         //Look at the last block the chain that is same as dummy data
         expect(bc.chain[bc.chain.length-1].data).toEqual(data)
     });
+
+
+    //3.Test validate a valid chain
+    it('validates a valid chain', () => {
+        bc2.addBlock('foo');
+
+        expect(bc.isValidChain(bc2.chain)).toBe(true);
+    });
+
+    //4.Test invalidates with a corrupt genesis block
+    it('invalidates a chain with a corrupt genesis block', () => {
+       //incase bad data is in genesis block
+        bc2.chain[0].data = 'Bad data';
+
+        expect(bc.isValidChain(bc2.chain)).toBe(false);
+    });
+
+    //5.Test invalidates a corrupt chain *(Data is tempered)
+    it('invalidates a corrupt chain', () => {
+        //incase add block is changes then
+        bc2.addBlock('foo');
+        bc2.chain[1].data = 'Not foo';
+
+        expect(bc.isValidChain(bc2.chain)).toBe(false);
+    });
+
+
 
 });
 
