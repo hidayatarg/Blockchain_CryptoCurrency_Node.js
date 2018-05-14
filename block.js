@@ -13,10 +13,6 @@ class Block{
 
     }
 
-
-
-
-
     //will be using for debugging (in OOP) 
     //for last hash 10 digit is enough
     toString(){
