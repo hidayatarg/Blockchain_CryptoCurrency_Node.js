@@ -58,6 +58,19 @@ describe('Blockchain', () => {
         expect(bc.isValidChain(bc2.chain)).toBe(false);
     });
 
+    //Test for the replaceChain function in the Block.js
+
+    //1.Test: Check if the chain is replaced with a valid chain
+    it('Testing: Replaces the chain with a valid chain', () => {
+        //add a new block 
+        bc2.addBlock('goodness');
+       // pass the first change to the blockchain it should valid
+        bc.replaceChain(bc2.chain);
+
+        //check the change of the first instance should equal to the change of second instance
+        expect(bc.chain).toEqual(bc2.chain);
+
+    });
 
 
 });
