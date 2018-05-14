@@ -1,5 +1,5 @@
 //Access to the required blockchain module
-const Blockchain = require('./blockchain');
+const Blockchain = require('./index');
 
 //require the block model that has gunesis function
 const Block= require('./block')
