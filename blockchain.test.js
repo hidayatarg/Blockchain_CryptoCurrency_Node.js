@@ -72,6 +72,19 @@ describe('Blockchain', () => {
 
     });
 
+    //2.Test: Check if the chain is replaced with a valid chain
+    it('It does not replace the chain with one of less than or equal to length', () => {
+       
+        bc.addBlock('wee');
+       // pass the first change to the blockchain it should valid
+        bc.replaceChain(bc2.chain);
+
+        //check the change of the first instance should not equal with the change of second instance
+        expect(bc.chain).not.toEqual(bc2.chain);
+
+    });
+
+    
 
 });
 
