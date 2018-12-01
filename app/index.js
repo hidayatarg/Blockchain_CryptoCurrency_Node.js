@@ -23,7 +23,7 @@ app.post('/mine', (req, res) => {
     console.log(`New block added: ${block.toString()}`);
 
     //redirect to the 
-    res.redirect('/block')
+    res.redirect('/blocks')
 });
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port: ${HTTP_PORT}`));
