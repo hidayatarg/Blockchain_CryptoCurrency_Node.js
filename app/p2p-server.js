@@ -21,14 +21,24 @@ class p2pServer{
         // Listen for the incoming messages
         // Fire when new socket connected call back function will do work
         server.on('connection', socket=>this.connectSocket(socket));
+
+        this.connectToPeers();
         console.log(`Listening for peer-to-peer connections on: ${P2P_PORT}`);
+    }
+
+    connectToPeers(){
+        // For each pairs
+        peers.forEach(peer => {
+            // ws:localhost:501
+            const socket = new Websocket(peer);
+            // start server
+            socket.on('open', () => this.connectSocket(socket))
+        });
     }
 
     connectSocket(socket){
         this.sockets.push(socket);
         console.log('Socket connected');
-        
     }
 }
-
-
+module.exports = p2pServer;
