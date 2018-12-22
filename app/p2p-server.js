@@ -40,7 +40,9 @@ class p2pServer{
         this.sockets.push(socket);
         console.log('Socket connected');
         this.messageHandler(socket);
-        socket.send(JSON.stringify(this.blockchain.chain));
+        
+        // sendChain
+        this.sendChain(socket)
 
     }
 
@@ -48,9 +50,21 @@ class p2pServer{
         socket.on('message', message => {
             // convert Stringfy to JSON
             const data = JSON.parse(message);
-            console.log('data', data);
-            
-        })
+           // console.log('data', data);
+            // represent pain from an other chain
+            this.blockchain.replaceChain(data);            
+        });
     }
+    
+    sendChain(socket){
+        socket.send(JSON.stringify(this.blockchain.chain));
+    }
+
+    // synchroize the change
+    syncChain(){
+        this.sockets.forEach(socket =>this.sendChain(socket));
+    }
+
+
 }
 module.exports = p2pServer;
