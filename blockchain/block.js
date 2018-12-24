@@ -3,8 +3,7 @@
 const SHA256=require('crypto-js/sha256')
 
 //level of difficulty
-const DIFFICULTY=4;
-
+const { DIFFICULTY } = require('./config')
 
 class Block{
     //we call attributes that a block need 
@@ -40,7 +39,6 @@ class Block{
        //generate a timestamp
         let hash, timestamp;
         
-        const 
         //local hash constant assign to the hash of the last block
         const lastHash= lastBlock.hash;
         

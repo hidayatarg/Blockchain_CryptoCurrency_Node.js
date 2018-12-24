@@ -2,6 +2,9 @@
 
 const Block= require('./block');
 
+//level of difficulty
+const { DIFFICULTY } = require('./config')
+
 //providing the test the block and the error call back function
 describe('Block', ()=>{
     //Declaring variables
@@ -31,6 +34,13 @@ describe('Block', ()=>{
     //2.Test last hash is set properly
     it('set the `lastHash`to match the hash of the last block',()=> {
         expect (block.lastHash).toEqual(lastBlock.hash)
+    });
+
+    //3.Test
+    it('generates a hash that matches the difficulty', ()=>{
+        expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY));
+        console.log(block.toString());
+        
     });
 
 });
