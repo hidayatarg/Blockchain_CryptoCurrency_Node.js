@@ -10,3 +10,11 @@ JSON>>
 
 to test
 
+## TESTS
+```
+npm run dev-test
+```
+print 10 blocks to block chain uses the mine rate and difficulty level
+
+
+
