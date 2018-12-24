@@ -38,11 +38,22 @@ describe('Block', ()=>{
 
     //3.Test
     it('generates a hash that matches the difficulty', ()=>{
-        expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY));
+        expect(block.hash.substring(0, block.difficulty)).toEqual('0'.repeat(block.difficulty));
         console.log(block.toString());
         
     });
 
+    //4.Test
+    it('lowers the difficulty for slowly mined blocks', ()=>{
+        // input 
+        expect(Block.adjustDifficulty(block, block.timestamp+36000)).toEqual(block.difficulty-1);
+    });
+
+    //5.Test
+    it('raises the difficulty for quickly mined blocks', ()=>{
+        // input 
+        expect(Block.adjustDifficulty(block, block.timestamp+1)).toEqual(block.difficulty+1);
+    });
 });
 
 //beforeach function: allow the same code for each of the following unit test
