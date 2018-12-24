@@ -4,7 +4,7 @@ const bodyparser= require ('body-parser')
 
 const Blockchain = require('../blockchain');
 //p2p server
-const P2pServer = require('.//p2p-server')
+const P2pServer = require('./p2p-server')
 
 
 const HTTP_PORT = process.env.HTTP_PORT || 2001;
