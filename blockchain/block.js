@@ -3,18 +3,21 @@
 const SHA256=require('crypto-js/sha256')
 
 //level of difficulty
-const { DIFFICULTY } = require('./config')
+//level of mine rate (in)
+const { DIFFICULTY , MINE_RATE} = require('./config')
+
+
 
 class Block{
     //we call attributes that a block need 
-    constructor(timestamp, lastHash, hash, data, nonce){
+    constructor(timestamp, lastHash, hash, data, nonce, difficulty){
         //input given to this constructor bind to the class
-        this.timestamp = timestamp;
-        this.lastHash = lastHash;
-        this.hash = hash;
-        this.data = data;
-        this.nonce = nonce
-
+        this.timestamp  = timestamp;
+        this.lastHash   = lastHash;
+        this.hash       = hash;
+        this.data       = data;
+        this.nonce      = nonce;
+        this.difficulty = difficulty || DIFFICULTY;
     }
 
     //will be using for debugging (in OOP) 
@@ -25,14 +28,15 @@ class Block{
         Last Hash   : ${this.lastHash.substring(0,10)}
         Hash        : ${this.hash.substring(0, 10)}
         Nonce       : ${this.nonce}
+        Difficulty  : ${this.difficulty}
         Data        : ${this.data}
     `
     }
     
     static genesis(){
         //this- return itself (zero default nonce value)
-        //last hash dmmy value, a dummy value, empty array
-        return new this('Genesis time','-------','f1r57-h45h', [], 0)
+        //last hash dmmy value, a dummy value, empty array (zero starting nonce)
+        return new this('Genesis time','-------','f1r57-h45h', [], 0, DIFFICULTY);
     }
 
     static mineBlock(lastBlock, data){
@@ -41,7 +45,9 @@ class Block{
         
         //local hash constant assign to the hash of the last block
         const lastHash= lastBlock.hash;
-        
+
+        //last block difficulty for the new block difficulty
+        let {difficulty} = lastBlock
         let nonce = 0;
        
         // generate hash each iteration
@@ -50,29 +56,37 @@ class Block{
             nonce++;
             // Generate timestamp at each iteration
             timestamp = Date.now();
-            hash = Block.hash(timestamp, lastHash, data, nonce);
-        }while(hash.substring(0, DIFFICULTY) !=='0'.repeat(DIFFICULTY));
+            difficulty = Block.adjustDifficulty(lastBlock, timestamp);
+            hash = Block.hash(timestamp, lastHash, data, nonce, difficulty);
+        }while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
         // check of the proof of work algorithm
         
        
         //return the new instance of the block (it is same as genesis)
-        return new this (timestamp,lastHash, hash, data, nonce);
+        return new this (timestamp,lastHash, hash, data, nonce, difficulty);
 
     }
 
     //static hash function: represent the unique data that we want to generate the hash for
     //Providing argument the time stamp of the block, last hash and the data the block is storing
-    static hash(timestamp,lastHash, data, nonce){
+    static hash(timestamp,lastHash, data, nonce, difficulty){
         //combing as one string using ES6 string
-        return SHA256(`${timestamp} ${lastHash}${data}${nonce}`).toString();
+        return SHA256(`${timestamp} ${lastHash}${data}${nonce}${difficulty}`).toString();
         //replace the to do with hash
     }
 
     //for generating hashes
     static blockHash(block){
-        //all values to generate hash
-        const {timestamp, lastHash, data, nonce}= block;
-        return Block.hash(timestamp, lastHash, data, nonce);
+        //all values to generate hash 
+        const {timestamp, lastHash, data, nonce, difficulty}= block;
+        return Block.hash(timestamp, lastHash, data, nonce, difficulty);
+    }
+
+    //adjust difficulty
+    static adjustDifficulty(lastBlock, currentTime){
+        let { difficulty } = lastBlock;
+        difficulty = lastBlock.timestamp + MINE_RATE > currentTime ? difficulty + 1 : difficulty - 1;
+        return difficulty;
     }
 
 }
